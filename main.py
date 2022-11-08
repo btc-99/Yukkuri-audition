@@ -24,6 +24,10 @@ def transform(text_path, aud_path):
     str = f.readlines()
     f.close()
 
+    ch_text = []
+    for i in range(0, len(str)):
+        ch_text = ch_text + [str[i].strip('\n')]
+
     # Chrome浏览器
     options = webdriver.ChromeOptions()
     prefs = {
@@ -101,6 +105,15 @@ def transform(text_path, aud_path):
             for name in names:
                 if os.path.splitext(name)[-1] != ".mp3":
                     flag = True
+
+        # 遍历所有文件，找出文件名为 yukumo_0001 的，修改其名称
+        files = [i for i in os.listdir(aud_path)]
+        for file_name in files:
+            name = list(file_name)
+            if name[0] == 'y':
+                old_name = aud_path + '\\' + file_name
+                new_name = aud_path + '\\' + ch_text[aud_num] + ".mp3"
+                os.rename(old_name, new_name)
         aud_num += 1
 
     driver.quit()
